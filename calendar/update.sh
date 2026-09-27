@@ -9,10 +9,13 @@
 # `current` at it and restarts the gateway. On any failure the running release stays live,
 # the commit is marked failed (not retried; delete releases/<sha>.failed to retry), and a
 # Telegram message goes out. Keeps the live release and the one before it.
+#
+# Testing: CALENDAR_UPDATE_REF=<branch> reads that branch instead of main. Run it by hand only.
 
 set -uo pipefail
 
 REPO=Mwalek/hermes-mcp-servers
+REF=${CALENDAR_UPDATE_REF:-main}
 BASE=/opt/data/profiles/gaffer/calendar
 REL=$BASE/releases
 ACCOUNT=bosunsmailbag@gmail.com
@@ -34,9 +37,9 @@ flock -n 9 || exit 0
 
 mkdir -p "$REL"
 
-sha=$(curl -fsS --max-time 20 "https://api.github.com/repos/$REPO/commits/main" | jq -r .sha 2>/dev/null)
+sha=$(curl -fsS --max-time 20 "https://api.github.com/repos/$REPO/commits/$REF" | jq -r .sha 2>/dev/null)
 if [[ ! "$sha" =~ ^[0-9a-f]{40}$ ]]; then
-  log "could not read main of $REPO; will try again next run"
+  log "could not read $REF of $REPO; will try again next run"
   exit 0
 fi
 
@@ -52,7 +55,7 @@ fail() {
   exit 1
 }
 
-log "main is ${sha:0:7}, live is ${prev:-none}; installing"
+log "$REF is ${sha:0:7}, live is ${prev:-none}; installing"
 rm -rf "$dir" && mkdir -p "$dir"
 
 for f in package.json package-lock.json probe.mjs; do
