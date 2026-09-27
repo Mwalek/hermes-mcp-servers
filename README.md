@@ -20,3 +20,5 @@ The Google Calendar MCP server ([nspady/google-calendar-mcp](https://github.com/
 - `update.sh`: the pull-deploy script that runs on the server.
 
 To upgrade by hand, change the version in `package.json`, run `npm install`, and open a PR with both files.
+
+The server checks for merged changes every 15 minutes and messages me on Telegram when a release goes live or is refused.
