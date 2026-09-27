@@ -27,7 +27,10 @@ export GOOGLE_CALENDAR_MCP_TOKEN_PATH=$BASE/tokens.json
 log() { printf '%s %s\n' "$(date -u +%FT%TZ)" "$*" >> "$LOG"; }
 notify() {
   log "$*"
-  (cd /tmp && hermes -p gaffer send --to telegram -q -s "Calendar MCP upgrade" "$*") >> "$LOG" 2>&1 \
+  local subject="Calendar MCP upgrade"
+  # A run against another branch is a test; say so, so it never reads like a real failure.
+  [ "$REF" = main ] || subject="[TEST: $REF] Calendar MCP upgrade"
+  (cd /tmp && hermes -p gaffer send --to telegram -q -s "$subject" "$*") >> "$LOG" 2>&1 \
     || log "telegram notice failed"
 }
 
