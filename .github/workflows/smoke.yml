@@ -1,0 +1,29 @@
+name: smoke
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  calendar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: calendar
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          # Matches the Node in the Hermes image on hostinger-1.
+          node-version: 26
+          cache: npm
+          cache-dependency-path: calendar/package-lock.json
+      - run: npm ci --no-fund --no-audit
+      # Starts the server with a fake credentials file and checks it lists its tools.
+      # It cannot reach Google; the real call happens on hostinger-1 before a release goes live.
+      - run: node probe.mjs tools

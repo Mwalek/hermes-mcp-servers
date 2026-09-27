@@ -1,0 +1,30 @@
+version: 2
+updates:
+  # The calendar MCP server. Version updates bump the pinned package in calendar/package.json;
+  # security updates can reach any package in the lockfile. Each kind arrives as one grouped PR.
+  - package-ecosystem: npm
+    directory: /calendar
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Australia/Sydney
+    versioning-strategy: increase
+    groups:
+      calendar-updates:
+        applies-to: version-updates
+        patterns: ["*"]
+      calendar-security:
+        applies-to: security-updates
+        patterns: ["*"]
+    commit-message:
+      prefix: calendar
+
+  # Keep the CI actions current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]

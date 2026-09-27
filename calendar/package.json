@@ -1,0 +1,13 @@
+{
+  "name": "hermes-calendar-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned install of the Google Calendar MCP server used by the gaffer Hermes profile on hostinger-1.",
+  "license": "MIT",
+  "scripts": {
+    "smoke": "node probe.mjs tools"
+  },
+  "dependencies": {
+    "@cocal/google-calendar-mcp": "2.6.3"
+  }
+}
