@@ -8,6 +8,6 @@
     "smoke": "node probe.mjs tools"
   },
   "dependencies": {
-    "@cocal/google-calendar-mcp": "2.6.3"
+    "@cocal/google-calendar-mcp": "2.7.0"
   }
 }
